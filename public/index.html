@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog Cá Nhân</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <header>
+        <h1>Blog Cá Nhân</h1>
+        <nav>
+            <button onclick="showSection('login')">Đăng nhập</button>
+            <button onclick="showSection('register')">Đăng ký</button>
+            <button onclick="showSection('posts')">Bài viết</button>
+            <button onclick="logout()">Đăng xuất</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Đăng nhập -->
+        <section id="login">
+            <h2>Đăng nhập</h2>
+            <form id="loginForm">
+                <input type="text" id="loginUsername" placeholder="Tên đăng nhập" required />
+                <input type="password" id="loginPassword" placeholder="Mật khẩu" required />
+                <button type="submit">Đăng nhập</button>
+            </form>
+        </section>
+
+        <!-- Đăng ký -->
+        <section id="register" class="hidden">
+            <h2>Đăng ký tài khoản</h2>
+            <form id="registerForm">
+                <input type="text" id="registerUsername" placeholder="Tên người dùng" required />
+                <input type="email" id="registerEmail" placeholder="Email" required />
+                <input type="password" id="registerPassword" placeholder="Mật khẩu" required />
+                <button type="submit">Đăng ký</button>
+            </form>
+        </section>
+
+        <!-- Danh sách bài viết -->
+        <section id="posts" class="hidden">
+            <h2>Bài viết của bạn</h2>
+            <button onclick="showSection('createPost')">+ Tạo bài viết mới</button>
+            <div id="postList"></div>
+        </section>
+
+        <!-- Tạo bài viết -->
+        <section id="createPost" class="hidden">
+            <h2>Tạo bài viết mới</h2>
+            <form id="createPostForm" enctype="multipart/form-data">
+                <input type="text" id="postTitle" placeholder="Tiêu đề bài viết" required />
+                <textarea id="postContent" rows="6" placeholder="Nội dung bài viết..." required></textarea>
+                <input type="file" id="postImage" accept="image/*" />
+                <button type="submit">Đăng bài</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
