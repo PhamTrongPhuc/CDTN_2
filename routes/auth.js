@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const authController = require('../controllers/authController');
 
-// ví dụ route đơn giản
-router.get('/', (req, res) => {
-    res.send('Auth route working!');
-});
+router.post('/register', authController.register);
+router.post('/login', authController.login); // ✅ thêm dòng này
 
-// xuất router ra ngoài để server.js sử dụng
 module.exports = router;

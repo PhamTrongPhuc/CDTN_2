@@ -1,13 +1,27 @@
 const mongoose = require('mongoose');
 
-const postSchema = new mongoose.Schema({
-    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', default: null },
-    title: { type: String, required: true },
-    content: { type: String, required: true },
-    image: { type: String },
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date }
+const PostSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    content: {
+        type: String,
+        required: true
+    },
+    category: {
+        type: String,  // ✅ Lưu dưới dạng chuỗi
+        trim: true
+    },
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 });
 
-module.exports = mongoose.model('Post', postSchema);
+module.exports = mongoose.model('Post', PostSchema);

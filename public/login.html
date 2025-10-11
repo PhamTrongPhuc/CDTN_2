@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav><a href="index.html">Trang chủ</a></nav>
+    <div class="container">
+        <h2>Đăng nhập</h2>
+        <form onsubmit="event.preventDefault(); login(this)">
+            <input name="usernameOrEmail" placeholder="Tài khoản hoặc Email" required>
+            <input type="password" name="password" placeholder="Mật khẩu" required>
+            <button>Đăng nhập</button>
+        </form>
+    </div>
+    <script src="main.js"></script>
+</body>
+
+</html>

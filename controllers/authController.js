@@ -1,21 +1,21 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken'); // 🟢 Thêm dòng này
 
 exports.register = async (req, res) => {
     try {
-        const { username, password, email, fullName } = req.body;
-        if (!username || !password || !email) return res.status(400).json({ message: 'Missing fields' });
+        const { username, email, password } = req.body;
+        if (!username || !email || !password)
+            return res.status(400).json({ message: 'Thiếu thông tin bắt buộc' });
+
         const existing = await User.findOne({ $or: [{ username }, { email }] });
-        if (existing) return res.status(400).json({ message: 'Username or email exists' });
+        if (existing)
+            return res.status(400).json({ message: 'Tài khoản đã tồn tại' });
 
-        const salt = await bcrypt.genSalt(10);
-        const hashed = await bcrypt.hash(password, salt);
-        const user = new User({ username, password: hashed, email, fullName });
-        await user.save();
+        const hashed = await bcrypt.hash(password, 10);
+        await User.create({ username, email, password: hashed });
+        res.status(201).json({ message: 'Đăng ký thành công!' });
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-        res.json({ token, user: { id: user._id, username: user.username, email: user.email } });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -24,17 +24,31 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { usernameOrEmail, password } = req.body;
-        if (!usernameOrEmail || !password) return res.status(400).json({ message: 'Missing fields' });
 
-        const user = await User.findOne({ $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }] });
-        if (!user) return res.status(400).json({ message: 'Invalid credentials' });
+        const user = await User.findOne({
+            $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }]
+        });
+        if (!user)
+            return res.status(400).json({ message: 'User not found' });
 
         const match = await bcrypt.compare(password, user.password);
-        if (!match) return res.status(400).json({ message: 'Invalid credentials' });
+        if (!match)
+            return res.status(400).json({ message: 'Wrong password' });
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-        res.json({ token, user: { id: user._id, username: user.username, email: user.email, role: user.role } });
+        // 🟢 Tạo token
+        const token = jwt.sign(
+            { id: user._id },
+            process.env.JWT_SECRET || 'mysecretkey',
+            { expiresIn: '1d' }
+        );
+
+        res.json({
+            message: 'Đăng nhập thành công!',
+            token
+        });
+
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.error(err);
+        res.status(500).json({ message: 'Lỗi server khi đăng nhập' });
     }
 };
