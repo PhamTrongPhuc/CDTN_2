@@ -10,18 +10,27 @@
 <body>
     <nav>
         <div><a href="index.html">Trang chủ</a></div>
-        <div>
-            <a href="create.html">Viết bài</a>
-            <a href="login.html">Đăng nhập</a>
-            <a href="register.html">Đăng ký</a>
-        </div>
+        <div id="auth-links"></div>
     </nav>
 
     <div class="container" id="post-list">Đang tải bài viết...</div>
 
     <script src="main.js"></script>
+
     <script>
-        loadPosts(); // gọi hàm từ main.js
+        console.log("✅ index.html đã tải xong");
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("🚀 Gọi loadPosts()");
+            updateAuthLinks();
+            loadPosts();
+        });
+    </script>
+    <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAuthLinks();
+            loadPosts();
+        });
     </script>
 </body>
 

@@ -8,7 +8,11 @@
 </head>
 
 <body>
-    <nav><a href="index.html">Trang chủ</a></nav>
+    <nav>
+        <a href="index.html">Trang chủ</a>
+        <div id="auth-links"></div>
+    </nav>
+
     <div class="container">
         <h2>Tạo tài khoản</h2>
         <form onsubmit="event.preventDefault(); register(this)">
@@ -18,7 +22,11 @@
             <button>Đăng ký</button>
         </form>
     </div>
+
     <script src="main.js"></script>
+    <script>
+        updateAuthLinks();
+    </script>
 </body>
 
 </html>

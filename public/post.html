@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Bài viết chi tiết</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9fafb;
+        }
+
+        #post-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #post-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #post-author {
+            font-size: 14px;
+            color: gray;
+            margin-bottom: 20px;
+        }
+
+        #post-image {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        #post-content {
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        #reactions {
+            margin-bottom: 30px;
+        }
+
+        #reactions button {
+            margin-right: 8px;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background: #e5e7eb;
+            transition: 0.2s;
+        }
+
+        #reactions button:hover {
+            background: #d1d5db;
+        }
+
+        #reaction-counts {
+            margin-top: 10px;
+            font-size: 15px;
+            color: #555;
+        }
+
+        #comments-section {
+            margin-top: 40px;
+        }
+
+        #comments-list p {
+            background: #f3f4f6;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+        }
+
+        #comment-content {
+            width: 100%;
+            height: 80px;
+            margin-top: 10px;
+        }
+
+        #submit-comment {
+            margin-top: 10px;
+            padding: 8px 14px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="index.html">⬅ Quay lại trang chủ</a>
+
+    <div id="post-container">
+        <div id="post-title"></div>
+        <div id="post-author"></div>
+        <img id="post-image" src="" alt="">
+        <div id="post-content"></div>
+
+        <div id="reactions">
+            <h3>Biểu cảm</h3>
+            <button class="react-btn" data-type="like">👍 Thích</button>
+            <button class="react-btn" data-type="love">❤️ Yêu thích</button>
+            <button class="react-btn" data-type="haha">😂 Haha</button>
+            <div id="reaction-counts"></div>
+        </div>
+
+        <div id="comments-section">
+            <h3>Bình luận</h3>
+            <div id="comments-list">Đang tải bình luận...</div>
+            <textarea id="comment-content" placeholder="Viết bình luận..."></textarea>
+            <button id="submit-comment">Gửi</button>
+        </div>
+    </div>
+
+    <script>
+        const postId = new URLSearchParams(window.location.search).get('id');
+        const token = localStorage.getItem('token');
+
+        // ============================
+        // 🔹 1️⃣ Lấy chi tiết bài viết
+        // ============================
+        async function loadPost() {
+            try {
+                const res = await fetch(`/api/posts/${postId}`);
+                const post = await res.json();
+
+                document.getElementById('post-title').textContent = post.title;
+                document.getElementById('post-author').textContent = "Tác giả: " + (post.author?.username || "Ẩn danh");
+                document.getElementById('post-content').textContent = post.content;
+                if (post.image) {
+                    document.getElementById('post-image').src = post.image;
+                    document.getElementById('post-image').style.display = 'block';
+                } else {
+                    document.getElementById('post-image').style.display = 'none';
+                }
+
+                // 🧮 Cập nhật tổng số cảm xúc
+                updateReactionCounts(post.reactions);
+            } catch (err) {
+                console.error("Lỗi khi tải bài viết:", err);
+            }
+        }
+
+        // ============================
+        // 🔹 2️⃣ Hiển thị tổng cảm xúc
+        // ============================
+        function updateReactionCounts(reactions) {
+            if (!reactions) return;
+            const div = document.getElementById('reaction-counts');
+            div.innerHTML = `
+        👍 ${reactions.like || 0} &nbsp;
+        ❤️ ${reactions.love || 0} &nbsp;
+        😂 ${reactions.haha || 0}
+      `;
+        }
+
+        // ============================
+        // 🔹 3️⃣ Gửi cảm xúc
+        // ============================
+        document.querySelectorAll('.react-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const reaction = btn.dataset.type;
+                try {
+                    const res = await fetch(`/api/posts/${postId}/react`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ reaction })
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        updateReactionCounts(data.reactions);
+                    } else {
+                        alert(data.message || 'Lỗi khi gửi cảm xúc!');
+                    }
+                } catch (err) {
+                    console.error("Lỗi khi gửi cảm xúc:", err);
+                }
+            });
+        });
+
+        // ============================
+        // 🔹 4️⃣ Bình luận
+        // ============================
+        async function loadComments() {
+            try {
+                const res = await fetch(`/api/comments/${postId}`);
+                const comments = await res.json();
+                const list = document.getElementById('comments-list');
+                list.innerHTML = comments.length
+                    ? comments.map(c => `<p><strong>${c.userId?.username || "Ẩn danh"}:</strong> ${c.content}</p>`).join('')
+                    : "<p>Chưa có bình luận nào.</p>";
+            } catch (err) {
+                console.error("Lỗi khi tải bình luận:", err);
+            }
+        }
+
+        document.getElementById('submit-comment').addEventListener('click', async () => {
+            const content = document.getElementById('comment-content').value.trim();
+            if (!content) return alert('Vui lòng nhập nội dung bình luận!');
+            try {
+                const res = await fetch('/api/comments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ postId, content })
+                });
+                if (res.ok) {
+                    document.getElementById('comment-content').value = '';
+                    loadComments();
+                } else {
+                    alert('❌ Bạn cần đăng nhập để bình luận!');
+                    window.location.href = 'login.html';
+                }
+            } catch (err) {
+                console.error("Lỗi khi gửi bình luận:", err);
+            }
+        });
+
+        // ============================
+        // 🔹 5️⃣ Khởi chạy khi tải trang
+        // ============================
+        loadPost();
+        loadComments();
+    </script>
+</body>
+
+</html>
