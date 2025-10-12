@@ -117,23 +117,20 @@ exports.updatePost = async (req, res) => {
 exports.deletePost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
-        if (!post) return res.status(404).json({ message: 'Post not found' });
-
-        // Kiểm tra quyền
-        if (post.author.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
-            return res.status(403).json({ message: 'No permission' });
+        if (!post) {
+            return res.status(404).json({ message: "Không tìm thấy bài viết!" });
         }
 
-        // Xóa ảnh trong thư mục uploads (nếu có)
-        if (post.image) {
-            const oldImagePath = path.join(__dirname, '..', post.image);
-            if (fs.existsSync(oldImagePath)) fs.unlinkSync(oldImagePath);
+        // Kiểm tra quyền (chỉ tác giả mới được xóa)
+        if (post.author.toString() !== req.user.id) {
+            return res.status(403).json({ message: "Bạn không có quyền xóa bài viết này!" });
         }
 
-        await post.deleteOne();
-        res.json({ message: 'Post removed' });
+        await Post.findByIdAndDelete(req.params.id);
+        res.json({ message: "🗑️ Xóa bài viết thành công!" });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.error(err);
+        res.status(500).json({ message: "Lỗi server khi xóa bài viết!" });
     }
 };
 // 🟢 Lấy danh sách tất cả bài viết

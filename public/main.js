@@ -1,5 +1,38 @@
 const API_BASE = 'http://localhost:3000/api';
 
+
+// Giả sử bạn đang lấy bài viết theo id trên URL:
+const urlParams = new URLSearchParams(window.location.search);
+const postId = urlParams.get("id");
+const token = localStorage.getItem("token");
+
+// Hàm load bài viết chi tiết
+async function loadPost() {
+    try {
+        const res = await fetch(`/api/posts/${postId}`);
+        const post = await res.json();
+
+        document.getElementById("post-title").innerText = post.title;
+        document.getElementById("post-content").innerText = post.content;
+        document.getElementById("post-image").src = post.imageUrl;
+
+        // ✅ Kiểm tra quyền (chỉ tác giả mới thấy nút xóa)
+        const userRes = await fetch("/api/auth/me", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const userData = await userRes.json();
+
+        if (userData.id === post.author._id) {
+            document.getElementById("delete-post-btn").style.display = "inline-block";
+        }
+
+    } catch (err) {
+        console.error("Lỗi khi load bài viết:", err);
+    }
+}
+
+loadPost();
+
 // ======================
 // 🔹 TẢI DANH SÁCH BÀI VIẾT
 // ======================
@@ -141,17 +174,45 @@ function logout() {
 // ======================
 // 👀 CẬP NHẬT MENU THEO TRẠNG THÁI
 // ======================
-function updateAuthLinks() {
+// ======================
+// 👤 CẬP NHẬT MENU THEO TRẠNG THÁI NGƯỜI DÙNG
+// ======================
+// ======================
+// 👤 CẬP NHẬT MENU THEO TRẠNG THÁI NGƯỜI DÙNG
+// ======================
+// ======================
+// 👤 CẬP NHẬT MENU THEO TRẠNG THÁI NGƯỜI DÙNG
+// ======================
+async function updateAuthLinks() {
     const authLinks = document.getElementById('auth-links');
     if (!authLinks) return;
 
     const token = localStorage.getItem('token');
 
     if (token) {
-        authLinks.innerHTML = `
-            <a href="create.html">✍️ Viết bài</a>
-            <button onclick="logout()" class="logout-btn">Đăng xuất</button>
-        `;
+        try {
+            // Decode token để lấy username hoặc email
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const userDisplay =
+                payload.username ||
+                payload.email ||
+                payload.name ||
+                "Người dùng";
+
+            authLinks.innerHTML = `
+                <a href="create.html">✍️ Viết bài</a>
+                <span style="margin-left: 10px;">👤 <strong>${userDisplay}</strong></span>
+                <button onclick="logout()" class="logout-btn">Đăng xuất</button>
+            `;
+        } catch (err) {
+            console.error('Lỗi khi đọc token:', err);
+            // Nếu token lỗi thì quay về login
+            localStorage.removeItem('token');
+            authLinks.innerHTML = `
+                <a href="login.html">Đăng nhập</a>
+                <a href="register.html">Đăng ký</a>
+            `;
+        }
     } else {
         authLinks.innerHTML = `
             <a href="login.html">Đăng nhập</a>
@@ -159,6 +220,8 @@ function updateAuthLinks() {
         `;
     }
 }
+
+
 
 // ======================
 // 🚀 KHỞI TẠO
@@ -183,3 +246,56 @@ document.querySelectorAll('.react-btn').forEach(btn => {
         alert(data.message);
     });
 });
+// =========================
+// Hàm load bài viết
+// =========================
+async function loadPost() {
+    try {
+        const res = await fetch(`/api/posts/${postId}`);
+        const post = await res.json();
+
+        document.getElementById("post-title").innerText = post.title;
+        document.getElementById("post-content").innerText = post.content;
+        document.getElementById("post-image").src = post.imageUrl;
+
+        // Kiểm tra quyền hiển thị nút xóa
+        const userRes = await fetch("/api/auth/me", {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        const userData = await userRes.json();
+
+        if (userData.id === post.author._id) {
+            document.getElementById("delete-post-btn").style.display = "inline-block";
+        }
+
+    } catch (err) {
+        console.error("Lỗi khi load bài viết:", err);
+    }
+}
+
+loadPost();
+
+// =========================
+// ⚙️ Bước 3: Xử lý sự kiện khi bấm nút xóa
+// =========================
+
+document.getElementById('delete-post-btn').addEventListener('click', async () => {
+    if (!confirm("Bạn có chắc muốn xóa bài viết này không?")) return;
+
+    try {
+        const res = await fetch(`/api/posts/${postId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await res.json();
+        alert(data.message);
+
+        if (res.ok) {
+            window.location.href = 'index.html';
+        }
+    } catch (err) {
+        console.error("Lỗi khi xóa bài viết:", err);
+    }
+});
+

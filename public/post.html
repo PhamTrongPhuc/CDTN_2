@@ -123,7 +123,12 @@
             <button id="submit-comment">Gửi</button>
         </div>
     </div>
-
+    <!-- Nút xóa bài viết (chỉ hiện nếu là tác giả) -->
+    <button id="delete-post-btn" style="display:none; background-color:#e63946; color:white; 
+               border:none; padding:8px 14px; border-radius:6px; 
+               cursor:pointer; margin-top:10px;">
+        🗑️ Xóa bài viết
+    </button>
     <script>
         const postId = new URLSearchParams(window.location.search).get('id');
         const token = localStorage.getItem('token');
@@ -139,6 +144,7 @@
                 document.getElementById('post-title').textContent = post.title;
                 document.getElementById('post-author').textContent = "Tác giả: " + (post.author?.username || "Ẩn danh");
                 document.getElementById('post-content').textContent = post.content;
+
                 if (post.image) {
                     document.getElementById('post-image').src = post.image;
                     document.getElementById('post-image').style.display = 'block';
@@ -148,11 +154,43 @@
 
                 // 🧮 Cập nhật tổng số cảm xúc
                 updateReactionCounts(post.reactions);
+
+                // ✅ Kiểm tra người dùng hiện tại có phải tác giả không
+                if (token) {
+                    // Thử gọi /api/auth/me nếu API hỗ trợ
+                    try {
+                        const userRes = await fetch('/api/auth/me', {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        if (userRes.ok) {
+                            const user = await userRes.json();
+                            if (user.id === post.author?._id) {
+                                document.getElementById('delete-post-btn').style.display = 'inline-block';
+                                // don't need to decode token
+                                return;
+                            }
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+
+                    // Nếu không có endpoint /api/auth/me, decode token ở client để lấy user id
+                    try {
+                        const payload = JSON.parse(atob(token.split('.')[1]));
+                        const userId = payload.id || payload._id || payload.userId || payload.sub || (payload._doc && (payload._doc.id || payload._doc._id));
+                        // console.log('decoded payload', payload, 'userId:', userId, 'post.author:', post.author);
+                        if (userId && post.author?._id && (userId === post.author._id.toString())) {
+                            document.getElementById('delete-post-btn').style.display = 'inline-block';
+                        }
+                    } catch (e) {
+                        // invalid token
+                    }
+                }
+
             } catch (err) {
                 console.error("Lỗi khi tải bài viết:", err);
             }
         }
-
         // ============================
         // 🔹 2️⃣ Hiển thị tổng cảm xúc
         // ============================
@@ -238,6 +276,28 @@
         // ============================
         loadPost();
         loadComments();
+
+
+        // ============================
+        // 🔹 6️⃣ Xử lý nút Xóa bài viết
+        // ============================
+        document.getElementById('delete-post-btn').addEventListener('click', async () => {
+            if (!confirm("Bạn có chắc muốn xóa bài viết này không?")) return;
+            try {
+                const res = await fetch(`/api/posts/${postId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                alert(data.message || (res.ok ? 'Xóa thành công' : 'Lỗi'));
+                if (res.ok) {
+                    window.location.href = 'index.html';
+                }
+            } catch (err) {
+                console.error("Lỗi khi xóa bài viết:", err);
+            }
+        });
+
     </script>
 </body>
 
