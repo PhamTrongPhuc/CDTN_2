@@ -8,24 +8,21 @@ exports.createPost = async (req, res) => {
         const { title, content, category } = req.body;
         const image = req.file ? `/uploads/${req.file.filename}` : null;
 
-        const newPost = new Post({
+        const post = await Post.create({
             title,
             content,
-            image,
             category,
-            author: req.user?.id
+            image,
+            author: req.user.id,
         });
 
-        const savedPost = await newPost.save();
-        res.status(201).json({ message: '✅ Đăng bài thành công!', post: savedPost });
-    } catch (error) {
-        if (error instanceof multer.MulterError && error.code === 'LIMIT_FILE_SIZE') {
-            return res.status(400).json({ message: '❌ Ảnh vượt quá kích thước cho phép (5MB).' });
-        }
-        console.error('❌ Lỗi khi tạo bài viết:', error);
-        res.status(500).json({ message: '❌ Lỗi server!', error: error.message });
+        res.status(201).json(post);
+    } catch (err) {
+        console.error("Lỗi khi tạo bài viết:", err);
+        res.status(500).json({ message: "Không thể tạo bài viết" });
     }
 };
+
 // Lấy tất cả bài viết
 exports.getPosts = async (req, res) => {
     try {

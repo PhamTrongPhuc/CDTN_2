@@ -191,6 +191,25 @@
                 console.error("Lỗi khi tải bài viết:", err);
             }
         }
+        async function deleteComment(commentId) {
+            if (!confirm("Bạn có chắc muốn xóa bình luận này không?")) return;
+            try {
+                const res = await fetch(`/api/comments/${commentId}`, {
+                    method: "DELETE",
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert(data.message);
+                    loadComments(); // tải lại danh sách bình luận
+                } else {
+                    alert(data.message || "Không thể xóa bình luận!");
+                }
+            } catch (err) {
+                console.error("Lỗi khi xóa bình luận:", err);
+            }
+        }
+
         // ============================
         // 🔹 2️⃣ Hiển thị tổng cảm xúc
         // ============================

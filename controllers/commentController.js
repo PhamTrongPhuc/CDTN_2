@@ -19,9 +19,24 @@ exports.createComment = async (req, res) => {
     res.status(500).json({ message: 'Lỗi khi thêm bình luận' });
   }
 };
+// Xóa bình luận
 exports.deleteComment = async (req, res) => {
-  await Comment.findByIdAndDelete(req.params.id);
-  res.json({ message: 'Deleted' });
+  try {
+    const comment = await Comment.findById(req.params.id);
+    if (!comment)
+      return res.status(404).json({ message: "Bình luận không tồn tại" });
+
+    // Kiểm tra người dùng hiện tại có phải là tác giả không
+    if (comment.userId.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Bạn không có quyền xóa bình luận này" });
+    }
+
+    await Comment.findByIdAndDelete(req.params.id);
+    res.json({ message: "Đã xóa bình luận thành công" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Lỗi server khi xóa bình luận" });
+  }
 };
 exports.getCommentsByPost = async (req, res) => {
   try {
