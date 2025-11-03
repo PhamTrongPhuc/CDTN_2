@@ -3,32 +3,170 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Viết bài mới</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 Viết bài mới | MyBlog</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Giữ nguyên phong cách từ index.html */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #f9fafb;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        nav {
+            background: linear-gradient(135deg, #4f46e5, #3b82f6);
+            color: #fff;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            margin-right: 15px;
+            transition: opacity 0.2s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            border: none;
+            padding: 6px 12px;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Container chính */
+        .container {
+            width: 90%;
+            max-width: 700px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .container h2 {
+            color: #1e3a8a;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* Form nhập bài viết */
+        form input[type="text"],
+        form textarea,
+        form input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        form input[type="text"]:focus,
+        form textarea:focus {
+            border-color: #3b82f6;
+            outline: none;
+        }
+
+        form textarea {
+            height: 180px;
+            resize: vertical;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(135deg, #4f46e5, #3b82f6);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            background-color: #f1f5f9;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <!-- 🧭 Thanh điều hướng -->
     <nav>
-        <a href="index.html">Trang chủ</a>
+        <div class="logo">
+            <a href="index.html" style="font-size: 20px;">🌿 MyBlog</a>
+        </div>
         <div id="auth-links"></div>
     </nav>
 
-    <div class="container">
-        <h2>Viết bài mới</h2>
+    <!-- ✍️ Form viết bài mới -->
+    <section class="container">
+        <h2>📝 Viết bài mới</h2>
         <form id="createForm" enctype="multipart/form-data">
-            <input type="text" name="title" placeholder="Tiêu đề bài viết" required><br><br>
-            <textarea name="content" placeholder="Nội dung bài viết" required></textarea><br><br>
-            <input type="file" name="image" accept="image/*"><br><br>
+            <input type="text" name="title" placeholder="Tiêu đề bài viết" required>
+            <textarea name="content" placeholder="Nội dung bài viết..." required></textarea>
+            <input type="file" name="image" accept="image/*">
             <button type="submit">Đăng bài</button>
         </form>
-    </div>
+    </section>
 
+    <!-- 🦶 Footer -->
+    <footer>
+        © 2025 MyBlog — Nơi chia sẻ ý tưởng & cảm xúc 💫
+    </footer>
+
+    <!-- 🧠 Script -->
     <script src="main.js"></script>
     <script>
-        // ✅ Gắn sự kiện xử lý submit form đúng cách
+        document.addEventListener("DOMContentLoaded", () => {
+            updateAuthLinks();
+        });
+
+        // Gửi form khi người dùng nhấn "Đăng bài"
         document.getElementById("createForm").addEventListener("submit", function (e) {
-            e.preventDefault(); // ❗ Ngăn form tự reload
-            createPost(this);   // Gọi hàm trong main.js
+            e.preventDefault();
+            createPost(this);
         });
     </script>
 </body>

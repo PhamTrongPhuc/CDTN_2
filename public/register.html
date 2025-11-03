@@ -3,29 +3,180 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Đăng ký</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧾 Đăng ký | MyBlog</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* 🌐 RESET */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #f9fafb;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 🧭 NAVIGATION */
+        nav {
+            background: linear-gradient(135deg, #4f46e5, #3b82f6);
+            color: #fff;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            margin-right: 15px;
+            transition: opacity 0.2s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            border: none;
+            padding: 6px 12px;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* 🧱 REGISTER CONTAINER */
+        .container {
+            width: 90%;
+            max-width: 450px;
+            margin: 80px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 35px;
+            text-align: center;
+        }
+
+        .container h2 {
+            color: #1e3a8a;
+            font-size: 24px;
+            margin-bottom: 25px;
+        }
+
+        /* 🧾 FORM STYLE */
+        form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        form input:focus {
+            border-color: #3b82f6;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #4f46e5, #3b82f6);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        /* 🔗 LINK TO LOGIN */
+        .login-link {
+            margin-top: 15px;
+            font-size: 15px;
+        }
+
+        .login-link a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* 🦶 FOOTER */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            background-color: #f1f5f9;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 60px;
+        }
+
+        /* 📱 RESPONSIVE */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <!-- 🧭 Thanh điều hướng -->
     <nav>
-        <a href="index.html">Trang chủ</a>
+        <div class="logo">
+            <a href="index.html" style="font-size: 20px;">🌿 MyBlog</a>
+        </div>
         <div id="auth-links"></div>
     </nav>
 
-    <div class="container">
-        <h2>Tạo tài khoản</h2>
+    <!-- 🧾 Form đăng ký -->
+    <section class="container">
+        <h2>🧾 Tạo tài khoản</h2>
         <form onsubmit="event.preventDefault(); register(this)">
-            <input name="username" placeholder="Tên đăng nhập" required>
-            <input name="email" type="email" placeholder="Email" required>
-            <input name="password" type="password" placeholder="Mật khẩu" required>
-            <button>Đăng ký</button>
+            <input type="text" name="username" placeholder="Tên đăng nhập" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Mật khẩu" required>
+            <button type="submit">Đăng ký</button>
         </form>
-    </div>
+        <p class="login-link">
+            Đã có tài khoản? <a href="login.html">Đăng nhập ngay</a>
+        </p>
+    </section>
 
+    <!-- 🦶 Footer -->
+    <footer>
+        © 2025 MyBlog — Nơi chia sẻ ý tưởng & cảm xúc 💫
+    </footer>
+
+    <!-- 🧠 Script -->
     <script src="main.js"></script>
     <script>
-        updateAuthLinks();
+        document.addEventListener("DOMContentLoaded", () => {
+            updateAuthLinks();
+        });
     </script>
 </body>
 

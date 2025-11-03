@@ -3,109 +3,220 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Bài viết chi tiết</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📰 Bài viết chi tiết | MyBlog</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9fafb;
+        /* 🌐 RESET */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        #post-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #f9fafb;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 🧭 NAVIGATION */
+        nav {
+            background: linear-gradient(135deg, #4f46e5, #3b82f6);
+            color: #fff;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            margin-right: 15px;
+            transition: opacity 0.2s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* 🧱 POST CONTAINER */
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
         }
 
         #post-title {
             font-size: 28px;
-            font-weight: bold;
+            font-weight: 700;
+            color: #1e3a8a;
             margin-bottom: 10px;
         }
 
         #post-author {
-            font-size: 14px;
-            color: gray;
+            color: #6b7280;
+            font-size: 15px;
             margin-bottom: 20px;
         }
 
         #post-image {
             width: 100%;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            object-fit: cover;
+            max-height: 450px;
         }
 
         #post-content {
             font-size: 18px;
+            color: #333;
             margin-bottom: 30px;
-            line-height: 1.6;
+            line-height: 1.8;
         }
 
+        /* ❤️ REACTIONS */
         #reactions {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
             margin-bottom: 30px;
+        }
+
+        #reactions h3 {
+            color: #1e3a8a;
+            margin-bottom: 10px;
         }
 
         #reactions button {
             margin-right: 8px;
-            padding: 6px 12px;
+            padding: 8px 14px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             background: #e5e7eb;
+            font-weight: 600;
             transition: 0.2s;
         }
 
         #reactions button:hover {
             background: #d1d5db;
+            transform: scale(1.05);
         }
 
         #reaction-counts {
-            margin-top: 10px;
+            margin-top: 12px;
             font-size: 15px;
             color: #555;
         }
 
-        #comments-section {
-            margin-top: 40px;
+        /* 💬 COMMENTS */
+        #comments-section h3 {
+            color: #1e3a8a;
+            margin-bottom: 15px;
         }
 
         #comments-list p {
-            background: #f3f4f6;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 6px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 8px;
         }
 
         #comment-content {
             width: 100%;
-            height: 80px;
+            padding: 10px;
             margin-top: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 80px;
+            font-size: 15px;
         }
 
         #submit-comment {
             margin-top: 10px;
-            padding: 8px 14px;
+            padding: 10px 18px;
             border: none;
-            background-color: #007bff;
+            background: linear-gradient(135deg, #4f46e5, #3b82f6);
             color: white;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        #submit-comment:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+        }
+
+        /* 🗑 DELETE BUTTON */
+        #delete-post-btn {
+            display: none;
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: 0.2s;
+        }
+
+        #delete-post-btn:hover {
+            background-color: #dc2626;
+        }
+
+        /* 🦶 FOOTER */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            background-color: #f1f5f9;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 40px;
+        }
+
+        /* 📱 RESPONSIVE */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .container {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 
 <body>
+    <!-- 🧭 NAVIGATION -->
+    <nav>
+        <div class="logo">
+            <a href="index.html" style="font-size: 20px;">🌿 MyBlog</a>
+        </div>
+        <div id="auth-links"></div>
+    </nav>
 
-    <a href="index.html">⬅ Quay lại trang chủ</a>
-
-    <div id="post-container">
+    <!-- 📰 POST CONTENT -->
+    <section class="container">
         <div id="post-title"></div>
         <div id="post-author"></div>
-        <img id="post-image" src="" alt="">
+        <img id="post-image" src="" alt="Ảnh bài viết">
         <div id="post-content"></div>
 
         <div id="reactions">
@@ -120,29 +231,30 @@
             <h3>Bình luận</h3>
             <div id="comments-list">Đang tải bình luận...</div>
             <textarea id="comment-content" placeholder="Viết bình luận..."></textarea>
-            <button id="submit-comment">Gửi</button>
+            <button id="submit-comment">Gửi bình luận</button>
         </div>
-    </div>
-    <!-- Nút xóa bài viết (chỉ hiện nếu là tác giả) -->
-    <button id="delete-post-btn" style="display:none; background-color:#e63946; color:white; 
-               border:none; padding:8px 14px; border-radius:6px; 
-               cursor:pointer; margin-top:10px;">
-        🗑️ Xóa bài viết
-    </button>
+
+        <!-- 🗑️ Delete post button -->
+        <button id="delete-post-btn">🗑️ Xóa bài viết</button>
+    </section>
+
+    <!-- 🦶 FOOTER -->
+    <footer>
+        © 2025 MyBlog — Nơi chia sẻ ý tưởng & cảm xúc 💫
+    </footer>
+
+    <!-- 🧠 SCRIPT -->
     <script>
         const postId = new URLSearchParams(window.location.search).get('id');
         const token = localStorage.getItem('token');
 
-        // ============================
-        // 🔹 1️⃣ Lấy chi tiết bài viết
-        // ============================
         async function loadPost() {
             try {
                 const res = await fetch(`/api/posts/${postId}`);
                 const post = await res.json();
 
                 document.getElementById('post-title').textContent = post.title;
-                document.getElementById('post-author').textContent = "Tác giả: " + (post.author?.username || "Ẩn danh");
+                document.getElementById('post-author').textContent = "✍️ Tác giả: " + (post.author?.username || "Ẩn danh");
                 document.getElementById('post-content').textContent = post.content;
 
                 if (post.image) {
@@ -152,12 +264,10 @@
                     document.getElementById('post-image').style.display = 'none';
                 }
 
-                // 🧮 Cập nhật tổng số cảm xúc
                 updateReactionCounts(post.reactions);
 
-                // ✅ Kiểm tra người dùng hiện tại có phải tác giả không
+                // Kiểm tra quyền xóa
                 if (token) {
-                    // Thử gọi /api/auth/me nếu API hỗ trợ
                     try {
                         const userRes = await fetch('/api/auth/me', {
                             headers: { 'Authorization': `Bearer ${token}` }
@@ -166,66 +276,31 @@
                             const user = await userRes.json();
                             if (user.id === post.author?._id) {
                                 document.getElementById('delete-post-btn').style.display = 'inline-block';
-                                // don't need to decode token
                                 return;
                             }
                         }
-                    } catch (e) {
-                        // ignore
-                    }
+                    } catch { }
 
-                    // Nếu không có endpoint /api/auth/me, decode token ở client để lấy user id
                     try {
                         const payload = JSON.parse(atob(token.split('.')[1]));
-                        const userId = payload.id || payload._id || payload.userId || payload.sub || (payload._doc && (payload._doc.id || payload._doc._id));
-                        // console.log('decoded payload', payload, 'userId:', userId, 'post.author:', post.author);
+                        const userId = payload.id || payload._id || payload.sub;
                         if (userId && post.author?._id && (userId === post.author._id.toString())) {
                             document.getElementById('delete-post-btn').style.display = 'inline-block';
                         }
-                    } catch (e) {
-                        // invalid token
-                    }
+                    } catch { }
                 }
 
             } catch (err) {
                 console.error("Lỗi khi tải bài viết:", err);
             }
         }
-        async function deleteComment(commentId) {
-            if (!confirm("Bạn có chắc muốn xóa bình luận này không?")) return;
-            try {
-                const res = await fetch(`/api/comments/${commentId}`, {
-                    method: "DELETE",
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                const data = await res.json();
-                if (res.ok) {
-                    alert(data.message);
-                    loadComments(); // tải lại danh sách bình luận
-                } else {
-                    alert(data.message || "Không thể xóa bình luận!");
-                }
-            } catch (err) {
-                console.error("Lỗi khi xóa bình luận:", err);
-            }
-        }
 
-        // ============================
-        // 🔹 2️⃣ Hiển thị tổng cảm xúc
-        // ============================
         function updateReactionCounts(reactions) {
             if (!reactions) return;
             const div = document.getElementById('reaction-counts');
-            div.innerHTML = `
-        👍 ${reactions.like || 0} &nbsp;
-        ❤️ ${reactions.love || 0} &nbsp;
-        😂 ${reactions.haha || 0}
-      `;
+            div.innerHTML = `👍 ${reactions.like || 0} &nbsp; ❤️ ${reactions.love || 0} &nbsp; 😂 ${reactions.haha || 0}`;
         }
 
-        // ============================
-        // 🔹 3️⃣ Gửi cảm xúc
-        // ============================
         document.querySelectorAll('.react-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
                 const reaction = btn.dataset.type;
@@ -239,20 +314,14 @@
                         body: JSON.stringify({ reaction })
                     });
                     const data = await res.json();
-                    if (res.ok) {
-                        updateReactionCounts(data.reactions);
-                    } else {
-                        alert(data.message || 'Lỗi khi gửi cảm xúc!');
-                    }
+                    if (res.ok) updateReactionCounts(data.reactions);
+                    else alert(data.message || 'Lỗi khi gửi cảm xúc!');
                 } catch (err) {
                     console.error("Lỗi khi gửi cảm xúc:", err);
                 }
             });
         });
 
-        // ============================
-        // 🔹 4️⃣ Bình luận
-        // ============================
         async function loadComments() {
             try {
                 const res = await fetch(`/api/comments/${postId}`);
@@ -268,7 +337,7 @@
 
         document.getElementById('submit-comment').addEventListener('click', async () => {
             const content = document.getElementById('comment-content').value.trim();
-            if (!content) return alert('Vui lòng nhập nội dung bình luận!');
+            if (!content) return alert('Vui lòng nhập bình luận!');
             try {
                 const res = await fetch('/api/comments', {
                     method: 'POST',
@@ -290,16 +359,6 @@
             }
         });
 
-        // ============================
-        // 🔹 5️⃣ Khởi chạy khi tải trang
-        // ============================
-        loadPost();
-        loadComments();
-
-
-        // ============================
-        // 🔹 6️⃣ Xử lý nút Xóa bài viết
-        // ============================
         document.getElementById('delete-post-btn').addEventListener('click', async () => {
             if (!confirm("Bạn có chắc muốn xóa bài viết này không?")) return;
             try {
@@ -309,14 +368,14 @@
                 });
                 const data = await res.json();
                 alert(data.message || (res.ok ? 'Xóa thành công' : 'Lỗi'));
-                if (res.ok) {
-                    window.location.href = 'index.html';
-                }
+                if (res.ok) window.location.href = 'index.html';
             } catch (err) {
                 console.error("Lỗi khi xóa bài viết:", err);
             }
         });
 
+        loadPost();
+        loadComments();
     </script>
 </body>
 
